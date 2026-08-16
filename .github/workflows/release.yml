@@ -1,0 +1,45 @@
+name: Release
+
+# Triggered by pushing a version tag (e.g. `git tag v0.2.0 && git push --tags`).
+# Builds the sdist/wheel and attaches them to a GitHub Release created from
+# the tag, using the repo's own built-in GITHUB_TOKEN — no PyPI publish here
+# (that needs a separate, explicitly-provisioned PYPI_API_TOKEN secret and a
+# deliberate decision to claim a public package name; add a publish step
+# later if/when that's actually wanted).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Run test suite before releasing
+        run: |
+          python -m pip install -e ".[dev,cli,claude,codex]"
+          python -m pytest -q
+
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+
+      - name: Create GitHub Release with build artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, py${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install package with all extras
+        # claude/codex extras are required just to *import* the adapter
+        # modules and their tests (claude_agent_sdk / openai_codex are
+        # hard imports, not optional) — no API key is needed to install
+        # or import them. Live-API tests stay opt-in via env vars this
+        # workflow deliberately never sets, so they skip here by design.
+        run: python -m pip install -e ".[dev,cli,claude,codex]"
+
+      - name: Run test suite
+        run: python -m pytest -q
+
+      - name: Check generated JSON Schemas for drift
+        run: |
+          python -m agent_harness.schema_export
+          git diff --exit-code -- schemas/
+
+      - name: Sweep for accidentally committed API keys
+        shell: bash
+        run: |
+          if grep -rlE "sk-ant-|sk-proj-" --include="*.py" --include="*.md" --include="*.toml" --include="*.json" .; then
+            echo "::error::possible API key literal found in tracked files"
+            exit 1
+          fi
+
+      - name: Console script entry point smoke check
+        shell: bash
+        run: harness --help
