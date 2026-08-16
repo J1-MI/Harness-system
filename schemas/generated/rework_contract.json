@@ -1,0 +1,303 @@
+{
+  "$defs": {
+    "BudgetRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "max_rework_iterations": {
+          "minimum": 0,
+          "title": "Max Rework Iterations",
+          "type": "integer"
+        },
+        "max_turns": {
+          "exclusiveMinimum": 0,
+          "title": "Max Turns",
+          "type": "integer"
+        },
+        "timeout_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "timeout_seconds",
+        "max_turns",
+        "max_rework_iterations"
+      ],
+      "title": "BudgetRequest",
+      "type": "object"
+    },
+    "RequestedCapabilities": {
+      "additionalProperties": false,
+      "description": "What a contract *asks for*. Never the source of effective permission.\n\nSee ``PolicyGrants`` for the trusted, policy-engine-computed counterpart.",
+      "properties": {
+        "command_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Command Ids",
+          "type": "array"
+        },
+        "database_targets": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Database Targets",
+          "type": "array"
+        },
+        "external_systems": {
+          "items": {
+            "type": "string"
+          },
+          "title": "External Systems",
+          "type": "array"
+        },
+        "mcp_tools": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Mcp Tools",
+          "type": "array"
+        },
+        "network_domains": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Network Domains",
+          "type": "array"
+        },
+        "package_install": {
+          "default": false,
+          "title": "Package Install",
+          "type": "boolean"
+        },
+        "raw_shell": {
+          "default": false,
+          "title": "Raw Shell",
+          "type": "boolean"
+        },
+        "workspace_access": {
+          "$ref": "#/$defs/WorkspaceAccessLevel",
+          "default": "READ_WRITE"
+        }
+      },
+      "title": "RequestedCapabilities",
+      "type": "object"
+    },
+    "RequiredFix": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_path_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Path Rules",
+          "type": "array"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "required_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Evidence",
+          "type": "array"
+        },
+        "verification_method": {
+          "$ref": "#/$defs/VerificationMethod"
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "verification_method"
+      ],
+      "title": "RequiredFix",
+      "type": "object"
+    },
+    "ScopeRules": {
+      "additionalProperties": false,
+      "properties": {
+        "allow_new_files": {
+          "default": true,
+          "title": "Allow New Files",
+          "type": "boolean"
+        },
+        "allowed_path_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Path Rules",
+          "type": "array"
+        },
+        "declared_generated_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Declared Generated Paths",
+          "type": "array"
+        },
+        "forbidden_path_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Path Rules",
+          "type": "array"
+        },
+        "max_changed_bytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Changed Bytes"
+        },
+        "max_changed_files": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Changed Files"
+        }
+      },
+      "title": "ScopeRules",
+      "type": "object"
+    },
+    "VerificationMethod": {
+      "enum": [
+        "COMMAND",
+        "ASSERTION",
+        "MANUAL"
+      ],
+      "title": "VerificationMethod",
+      "type": "string"
+    },
+    "WorkspaceAccessLevel": {
+      "enum": [
+        "NONE",
+        "READ",
+        "READ_WRITE"
+      ],
+      "title": "WorkspaceAccessLevel",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "attempt_number": {
+      "minimum": 1,
+      "title": "Attempt Number",
+      "type": "integer"
+    },
+    "budget": {
+      "$ref": "#/$defs/BudgetRequest"
+    },
+    "effective_scope": {
+      "$ref": "#/$defs/ScopeRules"
+    },
+    "failed_criteria_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Failed Criteria Ids",
+      "type": "array"
+    },
+    "finding_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Finding Ids",
+      "type": "array"
+    },
+    "integrity_digest": {
+      "title": "Integrity Digest",
+      "type": "string"
+    },
+    "parent_contract_digest": {
+      "title": "Parent Contract Digest",
+      "type": "string"
+    },
+    "parent_result_snapshot_digest": {
+      "title": "Parent Result Snapshot Digest",
+      "type": "string"
+    },
+    "parent_verification_id": {
+      "title": "Parent Verification Id",
+      "type": "string"
+    },
+    "prohibited_changes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Prohibited Changes",
+      "type": "array"
+    },
+    "requested_additional_capabilities": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RequestedCapabilities"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "required_fixes": {
+      "items": {
+        "$ref": "#/$defs/RequiredFix"
+      },
+      "minItems": 1,
+      "title": "Required Fixes",
+      "type": "array"
+    },
+    "rework_id": {
+      "title": "Rework Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "parent_contract_digest",
+    "parent_verification_id",
+    "parent_result_snapshot_digest",
+    "attempt_number",
+    "failed_criteria_ids",
+    "required_fixes",
+    "effective_scope",
+    "budget",
+    "integrity_digest"
+  ],
+  "title": "ReworkContract",
+  "type": "object"
+}

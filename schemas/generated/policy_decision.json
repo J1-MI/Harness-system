@@ -1,0 +1,295 @@
+{
+  "$defs": {
+    "BudgetRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "max_rework_iterations": {
+          "minimum": 0,
+          "title": "Max Rework Iterations",
+          "type": "integer"
+        },
+        "max_turns": {
+          "exclusiveMinimum": 0,
+          "title": "Max Turns",
+          "type": "integer"
+        },
+        "timeout_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "timeout_seconds",
+        "max_turns",
+        "max_rework_iterations"
+      ],
+      "title": "BudgetRequest",
+      "type": "object"
+    },
+    "PolicyGrants": {
+      "additionalProperties": false,
+      "description": "The only legitimate source of effective permission in the system.",
+      "properties": {
+        "budgets": {
+          "$ref": "#/$defs/BudgetRequest"
+        },
+        "command_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Command Ids",
+          "type": "array"
+        },
+        "external_targets": {
+          "items": {
+            "type": "string"
+          },
+          "title": "External Targets",
+          "type": "array"
+        },
+        "mcp_tools": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Mcp Tools",
+          "type": "array"
+        },
+        "network_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Network Rules",
+          "type": "array"
+        },
+        "package_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Package Rules",
+          "type": "array"
+        },
+        "path_rules": {
+          "$ref": "#/$defs/ScopeRules"
+        },
+        "sandbox_profile": {
+          "title": "Sandbox Profile",
+          "type": "string"
+        },
+        "workspace_access": {
+          "$ref": "#/$defs/WorkspaceAccessLevel",
+          "default": "NONE"
+        }
+      },
+      "required": [
+        "sandbox_profile",
+        "budgets"
+      ],
+      "title": "PolicyGrants",
+      "type": "object"
+    },
+    "PolicyOutcome": {
+      "enum": [
+        "ALLOW",
+        "REQUIRE_APPROVAL",
+        "DENY",
+        "MANUAL_REVIEW"
+      ],
+      "title": "PolicyOutcome",
+      "type": "string"
+    },
+    "ScopeRules": {
+      "additionalProperties": false,
+      "properties": {
+        "allow_new_files": {
+          "default": true,
+          "title": "Allow New Files",
+          "type": "boolean"
+        },
+        "allowed_path_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Path Rules",
+          "type": "array"
+        },
+        "declared_generated_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Declared Generated Paths",
+          "type": "array"
+        },
+        "forbidden_path_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Path Rules",
+          "type": "array"
+        },
+        "max_changed_bytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Changed Bytes"
+        },
+        "max_changed_files": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Changed Files"
+        }
+      },
+      "title": "ScopeRules",
+      "type": "object"
+    },
+    "SubjectType": {
+      "enum": [
+        "RUN",
+        "TASK",
+        "TASK_CONTRACT",
+        "REWORK_CONTRACT",
+        "COMMAND_SPEC",
+        "COMMAND_RUN",
+        "MCP_TOOL",
+        "NETWORK_DOMAIN",
+        "WORKSPACE_ACCESS",
+        "ARTIFACT",
+        "VERIFICATION",
+        "CAPABILITY_REQUEST"
+      ],
+      "title": "SubjectType",
+      "type": "string"
+    },
+    "WorkspaceAccessLevel": {
+      "enum": [
+        "NONE",
+        "READ",
+        "READ_WRITE"
+      ],
+      "title": "WorkspaceAccessLevel",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approval_requirements": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Approval Requirements",
+      "type": "array"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "denials": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Denials",
+      "type": "array"
+    },
+    "engine_version": {
+      "title": "Engine Version",
+      "type": "string"
+    },
+    "evaluated_at": {
+      "format": "date-time",
+      "title": "Evaluated At",
+      "type": "string"
+    },
+    "evaluated_fact_digests": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evaluated Fact Digests",
+      "type": "array"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expires At"
+    },
+    "grants": {
+      "$ref": "#/$defs/PolicyGrants"
+    },
+    "integrity_digest": {
+      "title": "Integrity Digest",
+      "type": "string"
+    },
+    "outcome": {
+      "$ref": "#/$defs/PolicyOutcome"
+    },
+    "policy_bundle_digest": {
+      "title": "Policy Bundle Digest",
+      "type": "string"
+    },
+    "policy_bundle_id": {
+      "title": "Policy Bundle Id",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "subject_digest": {
+      "title": "Subject Digest",
+      "type": "string"
+    },
+    "subject_id": {
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "subject_type": {
+      "$ref": "#/$defs/SubjectType"
+    }
+  },
+  "required": [
+    "subject_type",
+    "subject_id",
+    "subject_digest",
+    "policy_bundle_id",
+    "policy_bundle_digest",
+    "engine_version",
+    "evaluated_at",
+    "outcome",
+    "grants",
+    "integrity_digest"
+  ],
+  "title": "PolicyDecision",
+  "type": "object"
+}

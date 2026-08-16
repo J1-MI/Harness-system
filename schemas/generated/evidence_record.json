@@ -1,0 +1,196 @@
+{
+  "$defs": {
+    "ActorType": {
+      "enum": [
+        "USER",
+        "HARNESS",
+        "PLANNER",
+        "VERIFIER",
+        "WORKER",
+        "MCP_SERVER",
+        "HOST_TEST_RUNNER",
+        "POLICY_ENGINE",
+        "ADAPTER"
+      ],
+      "title": "ActorType",
+      "type": "string"
+    },
+    "EvidenceProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "collection_method": {
+          "title": "Collection Method",
+          "type": "string"
+        },
+        "invocation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Invocation Id"
+        },
+        "producer_id": {
+          "title": "Producer Id",
+          "type": "string"
+        },
+        "producer_type": {
+          "$ref": "#/$defs/ActorType"
+        },
+        "trust_tier": {
+          "$ref": "#/$defs/EvidenceTrustTier"
+        }
+      },
+      "required": [
+        "producer_type",
+        "producer_id",
+        "collection_method",
+        "trust_tier"
+      ],
+      "title": "EvidenceProvenance",
+      "type": "object"
+    },
+    "EvidenceTrustTier": {
+      "enum": [
+        "HOST_OBSERVED",
+        "POLICY_ENGINE_GENERATED",
+        "PROVIDER_EVENT_OBSERVED",
+        "PROVIDER_REPORTED",
+        "USER_ATTESTED",
+        "EXTERNAL_MCP_REPORTED"
+      ],
+      "title": "EvidenceTrustTier",
+      "type": "string"
+    },
+    "RedactionStatus": {
+      "enum": [
+        "NONE",
+        "REDACTED",
+        "QUARANTINED"
+      ],
+      "title": "RedactionStatus",
+      "type": "string"
+    },
+    "SubjectType": {
+      "enum": [
+        "RUN",
+        "TASK",
+        "TASK_CONTRACT",
+        "REWORK_CONTRACT",
+        "COMMAND_SPEC",
+        "COMMAND_RUN",
+        "MCP_TOOL",
+        "NETWORK_DOMAIN",
+        "WORKSPACE_ACCESS",
+        "ARTIFACT",
+        "VERIFICATION",
+        "CAPABILITY_REQUEST"
+      ],
+      "title": "SubjectType",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_refs": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Artifact Refs",
+      "type": "array"
+    },
+    "content_digest": {
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "evidence_id": {
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "kind": {
+      "minLength": 1,
+      "title": "Kind",
+      "type": "string"
+    },
+    "media_type": {
+      "title": "Media Type",
+      "type": "string"
+    },
+    "provenance": {
+      "$ref": "#/$defs/EvidenceProvenance"
+    },
+    "redaction_status": {
+      "$ref": "#/$defs/RedactionStatus",
+      "default": "NONE"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "size_bytes": {
+      "minimum": 0,
+      "title": "Size Bytes",
+      "type": "integer"
+    },
+    "subject_digest": {
+      "title": "Subject Digest",
+      "type": "string"
+    },
+    "subject_id": {
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "subject_type": {
+      "$ref": "#/$defs/SubjectType"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "truncated": {
+      "default": false,
+      "title": "Truncated",
+      "type": "boolean"
+    },
+    "verification_relevance": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Verification Relevance",
+      "type": "array"
+    }
+  },
+  "required": [
+    "run_id",
+    "task_id",
+    "subject_type",
+    "subject_id",
+    "subject_digest",
+    "kind",
+    "provenance",
+    "artifact_refs",
+    "media_type",
+    "content_digest",
+    "size_bytes",
+    "created_at"
+  ],
+  "title": "EvidenceRecord",
+  "type": "object"
+}

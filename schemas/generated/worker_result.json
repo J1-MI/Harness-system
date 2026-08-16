@@ -1,0 +1,336 @@
+{
+  "$defs": {
+    "ReportedChangedFile": {
+      "additionalProperties": false,
+      "properties": {
+        "change_type": {
+          "enum": [
+            "ADDED",
+            "MODIFIED",
+            "DELETED",
+            "RENAMED"
+          ],
+          "title": "Change Type",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "previous_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Previous Path"
+        }
+      },
+      "required": [
+        "path",
+        "change_type"
+      ],
+      "title": "ReportedChangedFile",
+      "type": "object"
+    },
+    "ReportedCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "title": "Command Id",
+          "type": "string"
+        },
+        "reported_duration_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reported Duration Ms"
+        },
+        "reported_exit_code": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reported Exit Code"
+        }
+      },
+      "required": [
+        "command_id"
+      ],
+      "title": "ReportedCommand",
+      "type": "object"
+    },
+    "ReportedTestRun": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Command Id"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "reported_failed": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reported Failed"
+        },
+        "reported_passed": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reported Passed"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ReportedTestRun",
+      "type": "object"
+    },
+    "RequestedCapabilities": {
+      "additionalProperties": false,
+      "description": "What a contract *asks for*. Never the source of effective permission.\n\nSee ``PolicyGrants`` for the trusted, policy-engine-computed counterpart.",
+      "properties": {
+        "command_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Command Ids",
+          "type": "array"
+        },
+        "database_targets": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Database Targets",
+          "type": "array"
+        },
+        "external_systems": {
+          "items": {
+            "type": "string"
+          },
+          "title": "External Systems",
+          "type": "array"
+        },
+        "mcp_tools": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Mcp Tools",
+          "type": "array"
+        },
+        "network_domains": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Network Domains",
+          "type": "array"
+        },
+        "package_install": {
+          "default": false,
+          "title": "Package Install",
+          "type": "boolean"
+        },
+        "raw_shell": {
+          "default": false,
+          "title": "Raw Shell",
+          "type": "boolean"
+        },
+        "workspace_access": {
+          "$ref": "#/$defs/WorkspaceAccessLevel",
+          "default": "READ_WRITE"
+        }
+      },
+      "title": "RequestedCapabilities",
+      "type": "object"
+    },
+    "WorkerResultStatus": {
+      "enum": [
+        "COMPLETED",
+        "PARTIAL",
+        "BLOCKED",
+        "FAILED"
+      ],
+      "title": "WorkerResultStatus",
+      "type": "string"
+    },
+    "WorkspaceAccessLevel": {
+      "enum": [
+        "NONE",
+        "READ",
+        "READ_WRITE"
+      ],
+      "title": "WorkspaceAccessLevel",
+      "type": "string"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Claude Worker's self-report. Trust tier is ``PROVIDER_REPORTED``.\n\nAll claim-carrying fields use a ``reported_`` prefix so callers cannot\nmistake this for host-observed evidence.",
+  "properties": {
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "blocked_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Blocked Reason"
+    },
+    "contract_digest": {
+      "title": "Contract Digest",
+      "type": "string"
+    },
+    "contract_id": {
+      "title": "Contract Id",
+      "type": "string"
+    },
+    "implementation_summary": {
+      "title": "Implementation Summary",
+      "type": "string"
+    },
+    "invocation_id": {
+      "title": "Invocation Id",
+      "type": "string"
+    },
+    "provider_artifact_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Provider Artifact Refs",
+      "type": "array"
+    },
+    "provider_session_ref": {
+      "title": "Provider Session Ref",
+      "type": "string"
+    },
+    "remaining_risks": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Remaining Risks",
+      "type": "array"
+    },
+    "reported_changed_files": {
+      "items": {
+        "$ref": "#/$defs/ReportedChangedFile"
+      },
+      "title": "Reported Changed Files",
+      "type": "array"
+    },
+    "reported_commands": {
+      "items": {
+        "$ref": "#/$defs/ReportedCommand"
+      },
+      "title": "Reported Commands",
+      "type": "array"
+    },
+    "reported_tests": {
+      "items": {
+        "$ref": "#/$defs/ReportedTestRun"
+      },
+      "title": "Reported Tests",
+      "type": "array"
+    },
+    "requested_additional_capabilities": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RequestedCapabilities"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_exceptions_requested": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Scope Exceptions Requested",
+      "type": "array"
+    },
+    "status": {
+      "$ref": "#/$defs/WorkerResultStatus"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "unverified_items": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unverified Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "task_id",
+    "contract_id",
+    "contract_digest",
+    "invocation_id",
+    "provider_session_ref",
+    "status",
+    "implementation_summary"
+  ],
+  "title": "WorkerResult",
+  "type": "object"
+}
